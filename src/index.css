@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://abswerit.github.io/fontsbd/public/kohinoor/fonts.css');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Kohinoor Bangla", "Inter", "Hind Siliguri", ui-sans-serif, system-ui, sans-serif;
+  --font-bengali: "Kohinoor Bangla", "Hind Siliguri", sans-serif;
+
+  --color-editorial-bg: #F8F7F4;
+  --color-editorial-text: #1A1A1A;
+  --color-editorial-border: #E5E3DE;
+  --color-editorial-muted: #706F6C;
+  --color-editorial-accent: #F2F1ED;
+}
+
