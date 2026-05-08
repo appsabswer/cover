@@ -39,58 +39,41 @@ export default function App() {
       // Small delay to ensure any layout changes are settled
       await new Promise(resolve => setTimeout(resolve, 300));
       
-      const blob = await toBlob(canvasRef.current, {
+      const canvas = await toCanvas(canvasRef.current, {
         pixelRatio: 2,
         backgroundColor: '#F8F7F4',
         cacheBust: true,
-        type: 'image/webp',
-        quality: 0.95
       });
 
-      if (!blob) throw new Error('Failed to create image');
+      if (!canvas) throw new Error('Failed to create canvas');
 
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      
-      // If the browser doesn't support webp, toBlob might return a png
-      // We can check the blob type
-      const isWebp = blob.type === 'image/webp';
-      link.download = `abswer-cover-${Date.now()}.${isWebp ? 'webp' : 'png'}`;
-      
-      link.href = url;
-      document.body.appendChild(link);
-      link.click();
-      
-      // Cleanup
-      setTimeout(() => {
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-      }, 100);
+      // Native toBlob usually handles formats better
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          throw new Error('Failed to create blob');
+        }
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        
+        // Check if it's actually webp, otherwise fallback to png name but try to keep webp if possible
+        const isWebp = blob.type === 'image/webp';
+        link.download = `abswer-cover-${Date.now()}.${isWebp ? 'webp' : 'png'}`;
+        
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        
+        // Cleanup
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, 100);
+      }, 'image/webp', 0.95);
 
     } catch (err) {
       console.error('Failed to download image:', err);
-      // Fallback
-      try {
-        const pngBlob = await toBlob(canvasRef.current!, {
-          pixelRatio: 2,
-          backgroundColor: '#F8F7F4',
-        });
-        if (pngBlob) {
-          const url = URL.createObjectURL(pngBlob);
-          const link = document.createElement('a');
-          link.download = `abswer-cover-${Date.now()}.png`;
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-          setTimeout(() => {
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-          }, 100);
-        }
-      } catch (e) {
-        console.error('Fallback failed too', e);
-        alert('Export failed. Please try again or use a different browser.');
-      }
+      alert('Export failed. Please try again or use a different browser.');
     } finally {
       setIsDownloading(false);
     }
