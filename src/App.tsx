@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useRef, useCallback } from 'react';
-import { toCanvas } from 'html-to-image';
+import { toCanvas, toBlob } from 'html-to-image';
 import { Canvas } from './components/Canvas';
 import { Sidebar } from './components/Sidebar';
 import { defaultCover, CoverData } from './types';
@@ -37,35 +37,59 @@ export default function App() {
     setIsDownloading(true);
     try {
       // Small delay to ensure any layout changes are settled
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 300));
       
-      const canvas = await toCanvas(canvasRef.current, {
-        pixelRatio: 2, // Stable high resolution
+      const blob = await toBlob(canvasRef.current, {
+        pixelRatio: 2,
         backgroundColor: '#F8F7F4',
         cacheBust: true,
+        type: 'image/webp',
+        quality: 0.95
       });
-      
-      const dataUrl = canvas.toDataURL('image/webp', 0.95);
-      
+
+      if (!blob) throw new Error('Failed to create image');
+
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.download = `abswer-cover-${Date.now()}.webp`;
-      link.href = dataUrl;
+      
+      // If the browser doesn't support webp, toBlob might return a png
+      // We can check the blob type
+      const isWebp = blob.type === 'image/webp';
+      link.download = `abswer-cover-${Date.now()}.${isWebp ? 'webp' : 'png'}`;
+      
+      link.href = url;
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
+      
+      // Cleanup
+      setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, 100);
+
     } catch (err) {
       console.error('Failed to download image:', err);
-      // Fallback for some browsers that might fail canvas.toDataURL for webp
+      // Fallback
       try {
-        const dataUrl = canvasRef.current ? await toCanvas(canvasRef.current).then(c => c.toDataURL('image/png')) : '';
-        if (dataUrl) {
+        const pngBlob = await toBlob(canvasRef.current!, {
+          pixelRatio: 2,
+          backgroundColor: '#F8F7F4',
+        });
+        if (pngBlob) {
+          const url = URL.createObjectURL(pngBlob);
           const link = document.createElement('a');
           link.download = `abswer-cover-${Date.now()}.png`;
-          link.href = dataUrl;
+          link.href = url;
+          document.body.appendChild(link);
           link.click();
+          setTimeout(() => {
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+          }, 100);
         }
       } catch (e) {
         console.error('Fallback failed too', e);
+        alert('Export failed. Please try again or use a different browser.');
       }
     } finally {
       setIsDownloading(false);
