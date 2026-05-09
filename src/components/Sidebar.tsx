@@ -19,10 +19,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ data, onChange, onDownload, on
   };
 
   return (
-    <aside className="w-full lg:w-[320px] border-l border-editorial-border bg-white flex flex-col h-full overflow-hidden">
+    <aside className="w-full lg:w-[320px] border-l border-editorial-border bg-white flex flex-col h-full overflow-hidden shadow-2xl lg:shadow-none">
       <div className="flex-1 overflow-y-auto">
+        {/* Mobile Header with Close Button */}
+        <div className="lg:hidden p-4 border-b border-editorial-border flex items-center justify-between bg-editorial-bg/10">
+          <span className="font-serif italic font-bold">Settings</span>
+          <button 
+            onClick={() => (window as any).dispatchEvent(new CustomEvent('toggleSidebar'))}
+            className="p-2 hover:bg-gray-200 rounded-full"
+          >
+            <Download size={20} className="rotate-45" /> {/* Using an icon as a placeholder for X if X is not available, but let's use a simple div */}
+          </button>
+        </div>
+
         {/* Content Section */}
-        <div className="p-6 border-b border-editorial-border">
+        <div className="p-4 lg:p-6 border-b border-editorial-border">
           <h3 className="font-serif italic text-lg tracking-tighter mb-6 flex items-center gap-2">
              <Type size={16} className="opacity-60" />
              Typography & Content

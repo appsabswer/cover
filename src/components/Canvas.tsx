@@ -8,13 +8,34 @@ interface CanvasProps {
 }
 
 export const Canvas: React.FC<CanvasProps> = ({ data, innerRef }) => {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [scale, setScale] = React.useState(1);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth - 32; // padding
+        const targetWidth = 960;
+        const newScale = Math.min(1, containerWidth / targetWidth);
+        setScale(newScale);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <div className="flex items-center justify-center bg-gray-200/40 p-4 min-h-[500px] lg:p-12">
+    <div ref={containerRef} className="flex items-center justify-center bg-gray-200/40 p-4 min-h-[300px] lg:min-h-[500px] lg:p-12 overflow-hidden">
       <div 
         ref={innerRef}
         id="cover-canvas"
-        className="relative bg-white shadow-2xl overflow-hidden aspect-[16/9] w-full max-w-[960px] flex flex-col items-center justify-center text-center !font-sans"
-        style={{ fontFamily: "'Kohinoor Bangla', sans-serif" }}
+        className="relative bg-white shadow-2xl overflow-hidden aspect-[16/9] w-[960px] flex flex-col items-center justify-center text-center !font-sans shrink-0 origin-center"
+        style={{ 
+          fontFamily: "'Kohinoor Bangla', sans-serif",
+          transform: `scale(${scale})`
+        }}
       >
         {/* Background Waves */}
         {/* Top-Right Large Curve */}
