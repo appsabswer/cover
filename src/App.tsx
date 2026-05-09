@@ -48,6 +48,8 @@ export default function App() {
       
       const canvas = await toCanvas(canvasRef.current, {
         pixelRatio: 1, // Reduced to 1 to decrease size by 50%
+        width: 960,
+        height: 540,
         cacheBust: true,
       });
 

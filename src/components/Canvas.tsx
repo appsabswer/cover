@@ -29,13 +29,13 @@ export const Canvas: React.FC<CanvasProps> = ({ data, innerRef }) => {
   return (
     <div ref={containerRef} className="flex items-center justify-center bg-gray-200/40 p-4 min-h-[300px] lg:min-h-[500px] lg:p-12 overflow-hidden">
       <div 
-        className="relative shadow-2xl overflow-hidden shrink-0 origin-center"
+        className="relative border border-gray-300 overflow-hidden shrink-0 origin-center bg-white"
         style={{ transform: `scale(${scale})` }}
       >
         <div 
           ref={innerRef}
           id="cover-canvas"
-          className="relative bg-white overflow-hidden aspect-[16/9] w-[960px] flex flex-col items-center justify-center text-center !font-sans"
+          className="relative bg-white w-[960px] h-[540px] flex flex-col items-center justify-center text-center !font-sans"
           style={{ 
             fontFamily: "'Kohinoor Bangla', sans-serif"
           }}
