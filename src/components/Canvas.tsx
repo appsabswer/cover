@@ -42,13 +42,13 @@ export const Canvas: React.FC<CanvasProps> = ({ data, innerRef }) => {
         >
           {/* Background Waves */}
           {/* Top-Right Large Curve */}
-          <div className="absolute -top-5 -right-5 w-[15%] h-[25%] pointer-events-none overflow-hidden">
+          <div className="absolute top-0 right-0 w-[15%] h-[25%] pointer-events-none overflow-hidden">
             <div 
-              className="w-full h-full rounded-bl-[100%] opacity-90" 
+              className="w-full h-full rounded-bl-[100%] opacity-90 translate-x-4 -translate-y-4" 
               style={{ backgroundColor: data.accentColor }}
             />
           </div>
-          <div className="absolute -top-8 -right-8 w-[15%] h-[25%] pointer-events-none opacity-30 transform translate-x-2 -translate-y-2">
+          <div className="absolute top-0 right-0 w-[15%] h-[25%] pointer-events-none opacity-30 transform translate-x-6 -translate-y-6">
              <div 
               className="w-full h-full rounded-bl-[100%] border-[10px]" 
               style={{ borderColor: data.accentColor }}
@@ -56,9 +56,9 @@ export const Canvas: React.FC<CanvasProps> = ({ data, innerRef }) => {
           </div>
 
           {/* Bottom-Left Large Curve */}
-          <div className="absolute -bottom-10 -left-10 w-[15%] h-[25%] pointer-events-none overflow-hidden">
+          <div className="absolute bottom-0 left-0 w-[15%] h-[25%] pointer-events-none overflow-hidden">
             <div 
-              className="w-full h-full rounded-tr-[100%] opacity-90" 
+              className="w-full h-full rounded-tr-[100%] opacity-90 -translate-x-6 translate-y-6" 
               style={{ backgroundColor: data.accentColor }}
             />
           </div>
@@ -92,7 +92,7 @@ export const Canvas: React.FC<CanvasProps> = ({ data, innerRef }) => {
               {data.title}
             </h1>
             <div 
-              className="w-1/2 h-1.5 rounded-full opacity-30 mt-[-4px]" 
+              className="w-1/2 h-1.5 rounded-full opacity-30 mt-0.5" 
               style={{ backgroundColor: data.accentColor }} 
             />
             
