@@ -46,42 +46,51 @@ export default function App() {
       // Small delay to ensure any layout changes are settled
       await new Promise(resolve => setTimeout(resolve, 300));
       
-      const canvas = await toCanvas(canvasRef.current, {
-        pixelRatio: 1, // Reduced to 1 to decrease size by 50%
+      // Force exact dimensions and remove any potential browser scaling artifacts
+      const options = {
+        pixelRatio: 1,
         width: 960,
         height: 540,
         cacheBust: true,
-      });
-
-      if (!canvas) throw new Error('Failed to create canvas');
-
-      // Native toBlob usually handles formats better
-      canvas.toBlob(async (blob) => {
-        if (!blob) {
-          throw new Error('Failed to create blob');
+        style: {
+          transform: 'scale(1)',
+          margin: '0',
+          padding: '0'
         }
+      };
 
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        
-        // Check if it's actually webp, otherwise fallback to png name but try to keep webp if possible
-        const isWebp = blob.type === 'image/webp';
-        link.download = `abswer-cover-${Date.now()}.${isWebp ? 'webp' : 'png'}`;
-        
-        link.href = url;
-        document.body.appendChild(link);
-        link.click();
-        
-        // Cleanup
-        setTimeout(() => {
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        }, 100);
-      }, 'image/webp', 0.95);
+      // Use toBlob for better mobile support
+      const blob = await toBlob(canvasRef.current, options);
+      
+      if (!blob) throw new Error('Failed to generate image');
+
+      // Create a unique filename
+      const timestamp = Date.now();
+      
+      // Robust download for mobile and desktop
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      
+      // Detect if the generated blob is actually webp or fallback to png
+      const isWebpSupported = blob.type === 'image/webp';
+      const extension = isWebpSupported ? 'webp' : 'png';
+      
+      link.href = url;
+      link.download = `abswer-cover-${timestamp}.${extension}`;
+      
+      // On some mobile devices, we need to append the link to the body
+      document.body.appendChild(link);
+      link.click();
+      
+      // Small delay before cleanup to ensure download starts
+      setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, 200);
 
     } catch (err) {
-      console.error('Failed to download image:', err);
-      alert('Export failed. Please try again or use a different browser.');
+      console.error('Download failed:', err);
+      alert('ডাউনলোড ব্যর্থ হয়েছে। দয়া করে অন্য কোনো ব্রাউজার (যেমন Chrome) ব্যবহার করে দেখুন।');
     } finally {
       setIsDownloading(false);
     }
