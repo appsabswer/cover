@@ -59,34 +59,32 @@ export default function App() {
         }
       };
 
-      // Use toBlob for better mobile support
-      const blob = await toBlob(canvasRef.current, options);
+      // Use toCanvas to have more control over the final blob format
+      const canvas = await toCanvas(canvasRef.current, options);
       
-      if (!blob) throw new Error('Failed to generate image');
+      if (!canvas) throw new Error('Failed to generate canvas');
 
-      // Create a unique filename
-      const timestamp = Date.now();
-      
-      // Robust download for mobile and desktop
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      
-      // Detect if the generated blob is actually webp or fallback to png
-      const isWebpSupported = blob.type === 'image/webp';
-      const extension = isWebpSupported ? 'webp' : 'png';
-      
-      link.href = url;
-      link.download = `abswer-cover-${timestamp}.${extension}`;
-      
-      // On some mobile devices, we need to append the link to the body
-      document.body.appendChild(link);
-      link.click();
-      
-      // Small delay before cleanup to ensure download starts
-      setTimeout(() => {
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-      }, 200);
+      // Manually convert canvas to WebP blob
+      canvas.toBlob(async (blob) => {
+        if (!blob) throw new Error('Failed to create blob');
+
+        // Create a unique filename
+        const timestamp = Date.now();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        
+        // At this point we are forcing webp
+        link.href = url;
+        link.download = `abswer-cover-${timestamp}.webp`;
+        
+        document.body.appendChild(link);
+        link.click();
+        
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, 200);
+      }, 'image/webp', 0.95);
 
     } catch (err) {
       console.error('Download failed:', err);
