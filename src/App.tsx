@@ -47,8 +47,7 @@ export default function App() {
       await new Promise(resolve => setTimeout(resolve, 300));
       
       const canvas = await toCanvas(canvasRef.current, {
-        pixelRatio: 2,
-        backgroundColor: '#F8F7F4',
+        pixelRatio: 1, // Reduced to 1 to decrease size by 50%
         cacheBust: true,
       });
 

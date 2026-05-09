@@ -29,54 +29,57 @@ export const Canvas: React.FC<CanvasProps> = ({ data, innerRef }) => {
   return (
     <div ref={containerRef} className="flex items-center justify-center bg-gray-200/40 p-4 min-h-[300px] lg:min-h-[500px] lg:p-12 overflow-hidden">
       <div 
-        ref={innerRef}
-        id="cover-canvas"
-        className="relative bg-white shadow-2xl overflow-hidden aspect-[16/9] w-[960px] flex flex-col items-center justify-center text-center !font-sans shrink-0 origin-center"
-        style={{ 
-          fontFamily: "'Kohinoor Bangla', sans-serif",
-          transform: `scale(${scale})`
-        }}
+        className="relative shadow-2xl overflow-hidden shrink-0 origin-center"
+        style={{ transform: `scale(${scale})` }}
       >
-        {/* Background Waves */}
-        {/* Top-Right Large Curve */}
-        <div className="absolute -top-5 -right-5 w-[15%] h-[25%] pointer-events-none overflow-hidden">
-          <div 
-            className="w-full h-full rounded-bl-[100%] opacity-90" 
-            style={{ backgroundColor: data.accentColor }}
-          />
-        </div>
-        <div className="absolute -top-8 -right-8 w-[15%] h-[25%] pointer-events-none opacity-30 transform translate-x-2 -translate-y-2">
-           <div 
-            className="w-full h-full rounded-bl-[100%] border-[10px]" 
-            style={{ borderColor: data.accentColor }}
-          />
-        </div>
+        <div 
+          ref={innerRef}
+          id="cover-canvas"
+          className="relative bg-white overflow-hidden aspect-[16/9] w-[960px] flex flex-col items-center justify-center text-center !font-sans"
+          style={{ 
+            fontFamily: "'Kohinoor Bangla', sans-serif"
+          }}
+        >
+          {/* Background Waves */}
+          {/* Top-Right Large Curve */}
+          <div className="absolute -top-5 -right-5 w-[15%] h-[25%] pointer-events-none overflow-hidden">
+            <div 
+              className="w-full h-full rounded-bl-[100%] opacity-90" 
+              style={{ backgroundColor: data.accentColor }}
+            />
+          </div>
+          <div className="absolute -top-8 -right-8 w-[15%] h-[25%] pointer-events-none opacity-30 transform translate-x-2 -translate-y-2">
+             <div 
+              className="w-full h-full rounded-bl-[100%] border-[10px]" 
+              style={{ borderColor: data.accentColor }}
+            />
+          </div>
 
-        {/* Bottom-Left Large Curve */}
-        <div className="absolute -bottom-10 -left-10 w-[15%] h-[25%] pointer-events-none overflow-hidden">
-          <div 
-            className="w-full h-full rounded-tr-[100%] opacity-90" 
-            style={{ backgroundColor: data.accentColor }}
-          />
-        </div>
+          {/* Bottom-Left Large Curve */}
+          <div className="absolute -bottom-10 -left-10 w-[15%] h-[25%] pointer-events-none overflow-hidden">
+            <div 
+              className="w-full h-full rounded-tr-[100%] opacity-90" 
+              style={{ backgroundColor: data.accentColor }}
+            />
+          </div>
 
-        {/* Dots Pattern */}
-        {data.showDots && (
-          <>
-            {/* Top-Left Green Dots */}
-            <div className="absolute top-10 left-10 grid grid-cols-4 gap-3">
-              {[...Array(12)].map((_, i) => (
-                <div key={i} className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: data.accentColor }} />
-              ))}
-            </div>
-            {/* Bottom-Right Grey Dots */}
-            <div className="absolute bottom-[20%] right-10 grid grid-cols-2 gap-4 opacity-10">
-              {[...Array(12)].map((_, i) => (
-                <div key={i} className="w-2 h-2 rounded-full bg-black shrink-0" />
-              ))}
-            </div>
-          </>
-        )}
+          {/* Dots Pattern */}
+          {data.showDots && (
+            <>
+              {/* Top-Left Green Dots */}
+              <div className="absolute top-10 left-10 grid grid-cols-4 gap-3">
+                {[...Array(12)].map((_, i) => (
+                  <div key={i} className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: data.accentColor }} />
+                ))}
+              </div>
+              {/* Bottom-Right Grey Dots */}
+              <div className="absolute bottom-[20%] right-10 grid grid-cols-2 gap-4 opacity-10">
+                {[...Array(12)].map((_, i) => (
+                  <div key={i} className="w-2 h-2 rounded-full bg-black shrink-0" />
+                ))}
+              </div>
+            </>
+          )}
 
         {/* Main Content */}
         <div className="relative z-10 w-full px-20 flex flex-col items-center">
